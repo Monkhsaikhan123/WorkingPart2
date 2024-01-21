@@ -1,0 +1,81 @@
+import React, { useState, useEffect, } from 'react';
+import {BrowserRouter, Routes, Route, Link, Outlet, NavLink} from 'react-router-dom'
+
+const Navbar1 = () => {
+
+
+    const [userData, setUserData] = useState('')
+
+    useEffect(()=>{
+
+        fetch('http://localhost:3000/userData',{
+            method:"POST",
+            crossDomain:true,
+            headers:{
+                "Content-Type" : 'application/json',
+                Accept: 'appilcation/json',
+                'Access-Control-Allow-Origin' : '*',
+            },
+            body:JSON.stringify({
+                token:window.localStorage.getItem("token")
+            })
+        })
+        .then((res)=>res.json())
+        .then((data)=>{
+            console.log(data)
+            setUserData(data.data)
+        })
+    }, []);
+        const logOut=()=>{
+            window.localStorage.clear();
+            window.location.href='./sign-in'
+        };
+
+       <script>
+            
+       </script>
+
+  return (
+    <div className=''>
+        <nav className="bg-white border-gray-200 dark:bg-gray-900">
+            <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+                <a href="https://flowbite.com" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+                </a>
+                <div class="flex items-center space-x-6 rtl:space-x-reverse">
+                    <a href="tel:5541251234" class="text-sm  text-gray-500 dark:text-white hover:underline">{userData.fname}</a>
+                    <a href="#" class="text-sm  text-blue-600 dark:text-blue-500 hover:underline">{userData.email}</a>
+                </div>
+            </div>
+        </nav>
+        <nav class="bg-gray-50 dark:bg-gray-700">
+            <div class="max-w-screen-xl px-4 py-3 mx-auto">
+                <div class="flex items-center">
+                    <ul class="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
+                        <li>
+                            <Link to='/userDetails'>Home</Link>
+                        </li>
+                        <li>
+                           <NavLink to='company'>Company</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='team'>Team</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='features'>Features</NavLink>
+                        </li>
+                        
+                    </ul>
+                    
+                </div>
+            </div>
+        </nav>
+        <div className='w-full h-auto bg-red-500'>
+                <Outlet/>
+        </div>
+    </div>
+  )
+}
+
+export default Navbar1
